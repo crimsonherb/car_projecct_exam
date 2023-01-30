@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car App</title>
+</head>
+<body>
+
+    <!-- Deciding which sort to get -->
+
+    <form method="GET">
+        <input type="radio" name="data" value="All">All
+        <input type="radio" name="data" value="Red">Red
+        <input type="radio" name="data" value="Blue">Blue
+        <input type="Submit">
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Color</td>
+                <td>Sequence</td>
+                <td>ID Number</td>
+            </tr>
+        </thead>
+        {% for car in cars %}
+        <tr>
+            <td>{{car.name}}</td>
+            <td>{{car.color}}</td>
+            <td>{{car.seq_number}}</td>
+            <td><a href="{% url 'update' pk=car.id %}">Edit</a></td>
+            <td><a href="{% url 'delete' pk=car.id %}">Delete</a></td>
+            <td><a href="{% url 'up' pk=car.id %}">Up</a></td>
+            <td><a href="{% url 'down' pk=car.id %}">Down</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url 'create' %}">
+        New Entry
+    </a>
+
+</body>
+</html>
