@@ -58,18 +58,20 @@ def deleteCar(request, pk):
 def MoveCar(pk, movement):
     car = CarModel.objects.get(id=pk)
     if movement == -1:
-        highest = CarModel.objects.aggregate(Max("seq_number"))[
-            "seq_number__max"]
-        data = highest
-    if movement == 1:
         lowest = CarModel.objects.aggregate(Min("seq_number"))[
             "seq_number__min"]
         data = lowest
+    if movement == 1:
+        highest = CarModel.objects.aggregate(Max("seq_number"))[
+            "seq_number__max"]
+        data = highest
     if data is not None:
-        dummy_seq = CarModel.objects.filter(
-            ~Q(id=pk), seq_number=data+movement).update(seq_number=car.seq_number)
-        print(dummy_seq)
-        CarModel.objects.filter(id=car.id).update(seq_number=data)
+        new = car.seq_number + movement
+        old = car.seq_number
+        if new != (data+movement):
+            CarModel.objects.filter(seq_number=new).update(seq_number=old)
+            CarModel.objects.filter(id=pk).update(
+                seq_number=new)
 
     return redirect('index')
 
